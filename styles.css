@@ -1,0 +1,164 @@
+:root {
+  --bg: #f3f6fb;
+  --card: #ffffff;
+  --text: #1f2937;
+  --muted: #6b7280;
+  --accent: #2563eb;
+  --accent-soft: #dbeafe;
+  --border: #d1d5db;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  color: var(--text);
+  background: var(--bg);
+}
+
+header,
+footer {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 1rem 1.25rem;
+}
+
+header h1 {
+  margin-bottom: 0.35rem;
+}
+
+header p,
+footer {
+  color: var(--muted);
+}
+
+main {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 1.25rem 1.5rem;
+}
+
+.controls,
+.address-panel,
+.map-card,
+.list-card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 1rem;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+}
+
+.controls {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 0.75rem;
+  margin-bottom: 1rem;
+}
+
+.control-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.checkbox-group {
+  justify-content: end;
+}
+
+select,
+input,
+button {
+  font: inherit;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 0.55rem 0.65rem;
+}
+
+button {
+  cursor: pointer;
+  border: none;
+  background: var(--accent);
+  color: #fff;
+}
+
+button.secondary {
+  background: #4b5563;
+}
+
+.address-panel {
+  margin-bottom: 1rem;
+}
+
+.address-panel h2 {
+  margin-top: 0;
+}
+
+.address-input-row {
+  display: grid;
+  grid-template-columns: 1fr auto auto;
+  gap: 0.5rem;
+}
+
+.note,
+#addressStatus {
+  color: var(--muted);
+}
+
+.content-grid {
+  display: grid;
+  grid-template-columns: 1.2fr 1fr;
+  gap: 1rem;
+}
+
+#map {
+  width: 100%;
+  height: 580px;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+}
+
+.table-wrap {
+  overflow: auto;
+  max-height: 580px;
+}
+
+table {
+  border-collapse: collapse;
+  width: 100%;
+}
+
+th,
+td {
+  border-bottom: 1px solid var(--border);
+  text-align: left;
+  padding: 0.5rem;
+  vertical-align: top;
+  font-size: 0.93rem;
+}
+
+thead th {
+  background: var(--accent-soft);
+  position: sticky;
+  top: 0;
+  z-index: 1;
+}
+
+@media (max-width: 1020px) {
+  .content-grid {
+    grid-template-columns: 1fr;
+  }
+
+  #map,
+  .table-wrap {
+    height: 420px;
+    max-height: 420px;
+  }
+
+  .address-input-row {
+    grid-template-columns: 1fr;
+  }
+}
