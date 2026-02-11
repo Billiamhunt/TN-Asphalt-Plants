@@ -1,5 +1,4 @@
 const companyFilter = document.getElementById('companyFilter');
-const typeFilter = document.getElementById('typeFilter');
 const stateFilter = document.getElementById('stateFilter');
 const citySearch = document.getElementById('citySearch');
 const plantsBody = document.getElementById('plantsBody');
@@ -22,26 +21,14 @@ let userAddressPoint = null;
 let plantMarkers = [];
 let distanceLines = [];
 
-const markerStyles = {
-  'Asphalt Plant': { color: '#1d4ed8', fillColor: '#3b82f6' },
-  'Sand & Gravel Pit': { color: '#92400e', fillColor: '#d97706' },
-  'Limestone Quarry': { color: '#065f46', fillColor: '#10b981' },
-};
-
-function populateDropdown(select, values) {
-  values.forEach((value) => {
-    const option = document.createElement('option');
-    option.value = value;
-    option.textContent = value;
-    select.append(option);
-  });
-}
-
-function initializeFilters() {
+function populateCompanyDropdown() {
   const companies = [...new Set(plants.map((p) => p.company))].sort();
-  const facilityTypes = [...new Set(plants.map((p) => p.type))].sort();
-  populateDropdown(companyFilter, companies);
-  populateDropdown(typeFilter, facilityTypes);
+  for (const company of companies) {
+    const option = document.createElement('option');
+    option.value = company;
+    option.textContent = company;
+    companyFilter.append(option);
+  }
 }
 
 function haversineMiles(aLat, aLng, bLat, bLng) {
@@ -58,25 +45,27 @@ function haversineMiles(aLat, aLng, bLat, bLng) {
 
 function getFilteredPlants() {
   const company = companyFilter.value;
-  const type = typeFilter.value;
   const state = stateFilter.value;
   const keyword = citySearch.value.trim().toLowerCase();
 
   return plants.filter((plant) => {
     const companyMatch = company === 'all' || plant.company === company;
-    const typeMatch = type === 'all' || plant.type === type;
     const stateMatch = state === 'all' || plant.state === state;
-    const searchBlob =
-      `${plant.type} ${plant.city} ${plant.county} ${plant.address} ${plant.plantName}`.toLowerCase();
+    const searchBlob = `${plant.city} ${plant.county} ${plant.address} ${plant.plantName}`.toLowerCase();
     const keywordMatch = !keyword || searchBlob.includes(keyword);
-    return companyMatch && typeMatch && stateMatch && keywordMatch;
+    return companyMatch && stateMatch && keywordMatch;
   });
 }
 
 function clearMapLayers() {
-  plantMarkers.forEach((marker) => map.removeLayer(marker));
-  distanceLines.forEach((line) => map.removeLayer(line));
+  for (const marker of plantMarkers) {
+    map.removeLayer(marker);
+  }
   plantMarkers = [];
+
+  for (const line of distanceLines) {
+    map.removeLayer(line);
+  }
   distanceLines = [];
 }
 
@@ -103,23 +92,6 @@ function drawDistanceLines(filteredPlants) {
     });
 }
 
-function createFacilityMarker(plant) {
-  const style = markerStyles[plant.type] || markerStyles['Asphalt Plant'];
-  return L.circleMarker([plant.lat, plant.lng], {
-    radius: 8,
-    color: style.color,
-    fillColor: style.fillColor,
-    fillOpacity: 0.9,
-    weight: 2,
-  }).bindPopup(`
-      <strong>${plant.plantName}</strong><br/>
-      ${plant.type}<br/>
-      ${plant.company}<br/>
-      ${plant.address}<br/>
-      ${plant.city}, ${plant.state}
-    `);
-}
-
 function renderMap(filteredPlants) {
   clearMapLayers();
 
@@ -129,7 +101,14 @@ function renderMap(filteredPlants) {
     : filteredPlants;
 
   plantsToMap.forEach((plant) => {
-    const marker = createFacilityMarker(plant).addTo(map);
+    const marker = L.marker([plant.lat, plant.lng])
+      .addTo(map)
+      .bindPopup(`
+        <strong>${plant.plantName}</strong><br/>
+        ${plant.company}<br/>
+        ${plant.address}<br/>
+        ${plant.city}, ${plant.state}
+      `);
     plantMarkers.push(marker);
   });
 
@@ -150,13 +129,17 @@ function renderTable(filteredPlants) {
 
   filteredPlants.forEach((plant) => {
     const tr = document.createElement('tr');
+
     const distance = userAddressPoint
       ? haversineMiles(userAddressPoint.lat, userAddressPoint.lng, plant.lat, plant.lng).toFixed(1)
       : '—';
 
     tr.innerHTML = `
-      <td><input type="checkbox" data-id="${plant.id}" ${selectedPlantIds.has(plant.id) ? 'checked' : ''} /></td>
-      <td>${plant.type}</td>
+      <td>
+        <input type="checkbox" data-id="${plant.id}" ${
+      selectedPlantIds.has(plant.id) ? 'checked' : ''
+    } />
+      </td>
       <td>${plant.company}</td>
       <td>${plant.plantName}</td>
       <td>${plant.city}, ${plant.county} Co., ${plant.state}</td>
@@ -167,9 +150,9 @@ function renderTable(filteredPlants) {
     plantsBody.append(tr);
   });
 
-  resultCount.textContent = `${filteredPlants.length} facilities shown`;
+  resultCount.textContent = `${filteredPlants.length} plants shown`;
 
-  plantsBody.querySelectorAll('input[type="checkbox"]').forEach((checkbox) => {
+  for (const checkbox of plantsBody.querySelectorAll('input[type="checkbox"]')) {
     checkbox.addEventListener('change', (event) => {
       const id = event.target.dataset.id;
       if (event.target.checked) {
@@ -179,7 +162,7 @@ function renderTable(filteredPlants) {
       }
       refresh();
     });
-  });
+  }
 }
 
 function refresh() {
@@ -257,10 +240,10 @@ clearAddressBtn.addEventListener('click', () => {
   refresh();
 });
 
-[companyFilter, typeFilter, stateFilter, citySearch, showOnlySelected].forEach((el) => {
+[companyFilter, stateFilter, citySearch, showOnlySelected].forEach((el) => {
   const eventName = el.tagName === 'INPUT' && el.type === 'text' ? 'input' : 'change';
   el.addEventListener(eventName, refresh);
 });
 
-initializeFilters();
+populateCompanyDropdown();
 refresh();

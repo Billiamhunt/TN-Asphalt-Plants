@@ -54,7 +54,7 @@ main {
 
 .controls {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
   gap: 0.75rem;
   margin-bottom: 1rem;
 }
@@ -106,36 +106,6 @@ button.secondary {
 .note,
 #addressStatus {
   color: var(--muted);
-}
-
-.legend {
-  display: flex;
-  gap: 1rem;
-  flex-wrap: wrap;
-  margin-bottom: 0.5rem;
-  color: var(--muted);
-  font-size: 0.9rem;
-}
-
-.dot {
-  display: inline-block;
-  width: 0.75rem;
-  height: 0.75rem;
-  border-radius: 999px;
-  margin-right: 0.35rem;
-  vertical-align: middle;
-}
-
-.dot.asphalt {
-  background: #3b82f6;
-}
-
-.dot.sand {
-  background: #d97706;
-}
-
-.dot.quarry {
-  background: #10b981;
 }
 
 .content-grid {
