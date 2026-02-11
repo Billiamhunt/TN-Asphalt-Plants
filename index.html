@@ -1,0 +1,129 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Mid-South Materials Facility Finder</title>
+    <link
+      rel="stylesheet"
+      href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+      integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
+      crossorigin=""
+    />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <header>
+      <h1>Mid-South Materials Facility Finder</h1>
+      <p>
+        Find asphalt plants, sand &amp; gravel pits, and limestone quarries across West Tennessee
+        (Memphis to Jackson) and North Mississippi (north of Oxford, plus east/west nearby).
+      </p>
+    </header>
+
+    <main>
+      <section class="controls">
+        <div class="control-group">
+          <label for="companyFilter">Company</label>
+          <select id="companyFilter">
+            <option value="all">All companies</option>
+          </select>
+        </div>
+
+        <div class="control-group">
+          <label for="typeFilter">Facility Type</label>
+          <select id="typeFilter">
+            <option value="all">All facility types</option>
+          </select>
+        </div>
+
+        <div class="control-group">
+          <label for="stateFilter">State</label>
+          <select id="stateFilter">
+            <option value="all">TN + MS</option>
+            <option value="TN">Tennessee</option>
+            <option value="MS">Mississippi</option>
+          </select>
+        </div>
+
+        <div class="control-group">
+          <label for="citySearch">City / County Search</label>
+          <input id="citySearch" type="text" placeholder="Try Memphis, Jackson, Oxford, DeSoto..." />
+        </div>
+
+        <div class="control-group checkbox-group">
+          <label>
+            <input id="showOnlySelected" type="checkbox" />
+            Show only selected facilities on map
+          </label>
+        </div>
+      </section>
+
+      <section class="address-panel">
+        <h2>Address Comparison</h2>
+        <div class="address-input-row">
+          <input
+            id="addressInput"
+            type="text"
+            placeholder="Enter your project/jobsite address"
+          />
+          <button id="mapAddressBtn">Map Address</button>
+          <button id="clearAddressBtn" class="secondary">Clear Address</button>
+        </div>
+        <p class="note">
+          Tip: Select one or more facilities in the table below to compare distance from your mapped
+          address.
+        </p>
+        <div class="legend">
+          <span><em class="dot asphalt"></em> Asphalt Plant</span>
+          <span><em class="dot sand"></em> Sand &amp; Gravel Pit</span>
+          <span><em class="dot quarry"></em> Limestone Quarry</span>
+        </div>
+        <div id="addressStatus" aria-live="polite"></div>
+      </section>
+
+      <section class="content-grid">
+        <div class="map-card">
+          <h2>Facility Map</h2>
+          <div id="map"></div>
+        </div>
+
+        <div class="list-card">
+          <h2>Facilities</h2>
+          <p id="resultCount"></p>
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>Select</th>
+                  <th>Type</th>
+                  <th>Company</th>
+                  <th>Facility</th>
+                  <th>Location</th>
+                  <th>Address</th>
+                  <th>Distance (mi)</th>
+                </tr>
+              </thead>
+              <tbody id="plantsBody"></tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer>
+      <small>
+        Locations are compiled from public records and map sources. Verify production status,
+        permit activity, and delivery access before dispatching.
+      </small>
+    </footer>
+
+    <script
+      src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+      integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
+      crossorigin=""
+    ></script>
+    <script src="plants.js"></script>
+    <script src="app.js"></script>
+  </body>
+</html>
